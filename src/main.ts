@@ -53,21 +53,13 @@ export class App implements OnInit {
       plugins: {
         legend: {
           display: true,
-          position: 'bottom',
-        },
-      },
-      layout: {
-        padding: {
-          top: 30,
-          left: 0,
-          right: 0,
-          bottom: 30,
         },
       },
     };
 
     const plugins = [
       {
+        id: 'oui la rue',
         afterDraw: (chart) => {
           const ctx = chart.ctx;
           // console.log("chart==", chart.config._config)
@@ -189,7 +181,7 @@ export class App implements OnInit {
     ];
 
     var myChart = new Chart(ctx, {
-      type: 'pie',
+      type: 'doughnut',
       plugins: plugins,
       options: options,
       data: {
@@ -217,11 +209,6 @@ export class App implements OnInit {
               'rgba(75, 192, 192, 1)',
             ],
             borderWidth: 1,
-            polyline: {
-              //   color: "gray",
-              //   labelColor: "gray",
-              formatter: (value) => `${value}`,
-            },
           },
         ],
       },
