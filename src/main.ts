@@ -2,7 +2,7 @@ import 'zone.js/dist/zone';
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { Chart } from 'chart.js';
+import { Chart } from 'chart.js/auto';
 
 @Component({
   selector: 'my-app',
@@ -49,12 +49,15 @@ export class App implements OnInit {
       // console.log("origin==", a);
       return a;
     };
+
     const options = {
       plugins: {
         legend: {
           display: true,
         },
       },
+      responsive: true,
+      maintainAspectRatio: false,
     };
 
     const plugins = [
@@ -63,6 +66,7 @@ export class App implements OnInit {
         afterDraw: (chart) => {
           const ctx = chart.ctx;
           // console.log("chart==", chart.config._config)
+
           ctx.save();
           ctx.font = "10px 'Averta Std CY'";
           const leftLabelCoordinates = [];
@@ -181,7 +185,7 @@ export class App implements OnInit {
     ];
 
     var myChart = new Chart(ctx, {
-      type: 'doughnut',
+      type: 'pie',
       plugins: plugins,
       options: options,
       data: {

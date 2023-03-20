@@ -1,3 +1,22 @@
 .wrapper {
-  width: 300px;
+  width: 90%;
+  height: 90%;
+  background: cyan;
+  border: 1px solid;
+}
+
+.bigger {
+  display: flex;
+  height: 400px;
+  align-content: center; /* aligns vertically */
+  justify-content: center; /* aligns horizontally */
+  border: 2px solid red;
+  resize: both;
+  overflow: auto;
+}
+
+canvas {
+  width: 10%;
+  height: 10%;
+  display: block;
 }
