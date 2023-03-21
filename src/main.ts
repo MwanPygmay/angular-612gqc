@@ -62,11 +62,12 @@ export class App implements OnInit {
 
     const plugins = [
       {
-        id: 'oui la rue',
+        id: 'ouilarue',
         afterDraw: (chart) => {
           const ctx = chart.ctx;
           // console.log("chart==", chart.config._config)
-
+          const extremeX = { left: -1, right: -1 };
+          const extremeY = { top: -1, bottom: -1 };
           ctx.save();
           ctx.font = "10px 'Averta Std CY'";
           const leftLabelCoordinates = [];
@@ -170,15 +171,47 @@ export class App implements OnInit {
             //fill custom label
             const labelAlignStyle =
               edgePointX < chartCenterPoint.x ? 'right' : 'left';
-            const labelX =
-              edgePointX < chartCenterPoint.x ? edgePointX : edgePointX + 0;
+            const labelX = edgePointX;
             const labelY = point2Y + 7;
             ctx.textAlign = labelAlignStyle;
             ctx.textBaseline = 'bottom';
             ctx.font = 'bold 12px Lato';
             // ctx.fillStyle = labelColor;
-            ctx.fillText(value, labelX, labelY);
+            ctx.fillText(label, edgePointX, labelY);
+            const metrics = ctx.measureText(label);
+            const labelWidth = metrics.width;
+            const labelHeight =
+              metrics.actualBoundingBoxAscent +
+              metrics.actualBoundingBoxDescent;
+
+            if (labelAlignStyle === 'left') {
+              extremeX.right = Math.max(extremeX.right, labelX + labelWidth);
+            } else if (labelAlignStyle === 'right') {
+              extremeX.left =
+                extremeX.left === -1 || labelX - labelWidth < extremeX.left
+                  ? labelX - labelWidth
+                  : extremeX.left;
+            }
+            extremeY.bottom = Math.max(extremeY.bottom, labelY);
+            extremeY.top =
+              extremeY.top === -1 || labelY < extremeY.top
+                ? labelY - labelHeight
+                : extremeY.top;
           });
+          const newChartWidth = Math.max(
+            extremeX['right'] - extremeX['left'],
+            chart.width
+          );
+          const newChartHeight = Math.max(extremeY['bottom'], chart.height);
+          var container = chart.canvas.parentNode;
+          var width = container.offsetWidth;
+          var height = container.offsetHeight;
+          const yRatio = newChartHeight / height;
+          const xRatio = newChartWidth / width;
+          if (xRatio < yRatio) {
+            chart.resize(xRatio * newChartWidth, xRatio * newChartHeight);
+          } else chart.resize(yRatio * newChartWidth, yRatio * newChartHeight);
+
           ctx.restore();
         },
       },
@@ -189,11 +222,18 @@ export class App implements OnInit {
       plugins: plugins,
       options: options,
       data: {
-        labels: ['Red', 'Blue', 'Yellow', 'Green', 'Greek', 'Greek'],
+        labels: [
+          'Red',
+          'Blue',
+          'Yellow',
+          'zhefuhzghiqofhbdgqg',
+          'Greek',
+          'Greek',
+        ],
         datasets: [
           {
             label: '# of Votes',
-            data: [30, 1, 0.4, 2, 0.3, 80],
+            data: [5, 1, 0.4, 2, 0.3, 10],
             backgroundColor: [
               'rgba(255, 99, 132, 0.8)',
               'rgba(54, 162, 235, 0.8)',
