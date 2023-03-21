@@ -198,21 +198,25 @@ export class App implements OnInit {
                 ? labelY - labelHeight
                 : extremeY.top;
           });
+          // Calculate new chart dimensions
           const newChartWidth = Math.max(
             extremeX['right'] - extremeX['left'],
             chart.width
           );
           const newChartHeight = Math.max(extremeY['bottom'], chart.height);
-          var container = chart.canvas.parentNode;
-          var width = container.offsetWidth;
-          var height = container.offsetHeight;
-          const yRatio = newChartHeight / height;
-          const xRatio = newChartWidth / width;
-          if (xRatio < yRatio) {
-            chart.resize(xRatio * newChartWidth, xRatio * newChartHeight);
-          } else chart.resize(yRatio * newChartWidth, yRatio * newChartHeight);
 
-          ctx.restore();
+          // Get container dimensions
+          const container = chart.canvas.parentNode;
+          const containerWidth = container.offsetWidth;
+          const containerHeight = container.offsetHeight;
+          const yRatio = containerHeight / newChartHeight;
+          const xRatio = containerWidth / newChartWidth;
+          chart.resize(0.3 * containerWidth, 0.3 * containerHeight);
+          // Choose the smaller of the two ratios to ensure the chart fits inside the container
+          const ratio = Math.min(xRatio, yRatio);
+          // Resize the chart based on the chosen ratio
+          //chart.resize(newChartWidth * ratio, newChartHeight * ratio);
+          //chart.resize(containerWidth, 200);
         },
       },
     ];
@@ -234,6 +238,7 @@ export class App implements OnInit {
           {
             label: '# of Votes',
             data: [5, 1, 0.4, 2, 0.3, 10],
+            weight: 12,
             backgroundColor: [
               'rgba(255, 99, 132, 0.8)',
               'rgba(54, 162, 235, 0.8)',
@@ -257,6 +262,7 @@ export class App implements OnInit {
         ],
       },
     });
+    myChart.resize(100, 100);
   }
 }
 
